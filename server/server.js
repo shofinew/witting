@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const connectDB = require('./src/config/db.js');
 const authRoutes = require('./src/routes/auth.js');
+const eventRoutes = require('./src/routes/event.js');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +23,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', authRoutes);
+app.use('/api', eventRoutes);
 
 // Start server
 app.listen(PORT, () => {
