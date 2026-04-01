@@ -1,26 +1,27 @@
 require('dotenv').config();
 
 const express = require('express');
-const mongoose = require('mongoose');
+const cors = require('cors');
+const connectDB = require('./src/config/db.js');
+const authRoutes = require('./src/routes/auth.js');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5000;
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
+
+// Connect to Database
+connectDB();
 
 // Middleware
+app.use(cors({ origin: CLIENT_URL }));
 app.use(express.json());
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/witting', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-    .then(() => console.log('MongoDB connected'))
-    .catch(err => console.error('MongoDB connection error:', err));
 
 // Routes
 app.get('/', (req, res) => {
     res.json({ message: 'Server is running!' });
 });
+
+app.use('/api', authRoutes);
 
 // Start server
 app.listen(PORT, () => {
